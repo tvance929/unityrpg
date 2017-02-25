@@ -2,15 +2,17 @@ using System;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
-[RequireComponent(typeof (ThirdPersonCharacter))]
+[RequireComponent(typeof(ThirdPersonCharacter))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float walkMoveStopRadius = 0.2f;
+    [SerializeField]
+    float walkMoveStopRadius = 0.2f;
 
     ThirdPersonCharacter m_Character;   // A reference to the ThirdPersonCharacter on the object
     CameraRaycaster cameraRaycaster;
     Vector3 currentClickTarget;
-        
+    bool isInDirectMode = false; //Consider making this static later
+
     private void Start()
     {
         cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
@@ -21,9 +23,38 @@ public class PlayerMovement : MonoBehaviour
     // Fixed update is called in sync with physics
     private void FixedUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.G)) // G for gamepad.  TODO add to menu
+        {
+            isInDirectMode = !isInDirectMode;
+        }
+
+        if (isInDirectMode)
+        {
+            ProcessDirectMovement();
+        }
+        else
+        {
+            ProcessMouseMovement();
+        }
+    }
+
+    private void ProcessDirectMovement()
+    {
+        // read inputs
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        // calculate camera relative direction to move:
+        var m_CamForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+        var m_Move = v * m_CamForward + h * Camera.main.transform.right;
+
+        m_Character.Move(m_Move, false, false);
+    }
+
+    private void ProcessMouseMovement()
+    {
         if (Input.GetMouseButton(0))
         {
-            print("Cursor raycast hit layer: " + cameraRaycaster.layerHit);
             switch (cameraRaycaster.layerHit)
             {
                 case Layer.Walkable:
@@ -36,7 +67,6 @@ public class PlayerMovement : MonoBehaviour
                     print("Unexpected layer found");
                     return;
             }
-            
         }
         var playerToClickPoint = currentClickTarget - transform.position;
         if (playerToClickPoint.magnitude >= walkMoveStopRadius)
@@ -47,7 +77,6 @@ public class PlayerMovement : MonoBehaviour
         {
             m_Character.Move(Vector3.zero, false, false);
         }
-        
     }
 }
 
