@@ -39,8 +39,8 @@ public class SpinMe : MonoBehaviour
             //  windIsBlowing = Random.Range(0, 20) < 18;
             //  if (!windIsBlowing) windStoppedFrames = Random.Range(5, 10); //Set the amount of frames to keep the wind stopped
 
-            Debug.Log(windIsBlowing);
-            Debug.Log(windStoppedFrames);
+           // Debug.Log(windIsBlowing);
+           // Debug.Log(windStoppedFrames);
         }
         else
         {

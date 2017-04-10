@@ -10,7 +10,7 @@ public class EnemyHealthBar : MonoBehaviour
     void Start()
     {
         enemy = GetComponentInParent<Enemy>(); // Different to way player's health bar finds player
-        print($"found enemy {enemy} ");
+       // print($"found enemy {enemy} ");
         healthBarRawImage = GetComponent<RawImage>();
     }
 
