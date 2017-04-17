@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
 
     [SerializeField]
@@ -16,12 +16,17 @@ public class Enemy : MonoBehaviour
     AICharacterControl aiCharacterControl = null;
     GameObject player = null;
 
-    public float healthAsPercentage
+    public float HealthAsPercentage
     {
         get
         {
             return currentHealthPoints / maxHealthPoints;
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealthPoints = Mathf.Clamp(currentHealthPoints - damage, 0f, maxHealthPoints);
     }
 
     public void Start()
