@@ -10,7 +10,9 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField]
     float maxHealthPoints = 100f;
     [SerializeField]
-    float attackRadius = 10f;
+    float attackRadius = 4f;
+    [SerializeField]
+    float chaseRadius = 6f;
 
     float currentHealthPoints = 100f;
     AICharacterControl aiCharacterControl = null;
@@ -38,7 +40,33 @@ public class Enemy : MonoBehaviour, IDamageable
     public void Update()
     {
         float distanceToPlayer = Vector3.Distance(player.transform.position, this.transform.position);
-        var targetTransform = (distanceToPlayer <= attackRadius) ? player.transform : this.transform;
+        var targetTransform = this.transform;
+        if (distanceToPlayer <= chaseRadius)
+        {
+            targetTransform = player.transform;
+            print($"{gameObject.name} chasing player");
+
+            if (distanceToPlayer <= attackRadius) print($"{gameObject.name} attacking player");
+
+        }
+
         aiCharacterControl.SetTarget(targetTransform);
+    }
+
+    void OnDrawGizmos()
+    {
+        //Movement gizmo
+        //Gizmos.color = Color.black;
+        //Gizmos.DrawLine(transform.position, clickPoint);
+        //Gizmos.DrawSphere(currend, 0.15f);
+        //Gizmos.DrawSphere(ckil, 0.1f);
+
+        //Chase sphere
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, chaseRadius);
+
+        //Attack sphere
+        Gizmos.color = new Color(255f, 0f, 0, .5f);
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 }
