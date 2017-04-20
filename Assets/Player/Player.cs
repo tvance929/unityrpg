@@ -5,9 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField]
-    float maxHealthPoints = 100f;
+    float maxHealthPoints = 1000f;
 
-    float currentHealthPoints = 100f;
+    float currentHealthPoints = 1000f;
 
     public float HealthAsPercentage
     {
@@ -20,5 +20,6 @@ public class Player : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         currentHealthPoints = Mathf.Clamp(currentHealthPoints - damage, 0f, maxHealthPoints);
+        Debug.Log($"Health is {currentHealthPoints}");
     }
 }

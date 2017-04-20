@@ -13,6 +13,12 @@ public class Enemy : MonoBehaviour, IDamageable
     float attackRadius = 4f;
     [SerializeField]
     float chaseRadius = 6f;
+    [SerializeField]
+    GameObject projectileToUse;
+    [SerializeField]
+    GameObject projectileSocket;
+    [SerializeField]
+    float damagePerShot = 9f;
 
     float currentHealthPoints = 100f;
     AICharacterControl aiCharacterControl = null;
@@ -46,11 +52,24 @@ public class Enemy : MonoBehaviour, IDamageable
             targetTransform = player.transform;
             print($"{gameObject.name} chasing player");
 
-            if (distanceToPlayer <= attackRadius) print($"{gameObject.name} attacking player");
+            if (distanceToPlayer <= attackRadius) SpawnProjectile();
 
         }
 
         aiCharacterControl.SetTarget(targetTransform);
+    }
+
+    void SpawnProjectile()
+    {
+        GameObject newProjectile = Instantiate(projectileToUse, projectileSocket.transform.position, Quaternion.identity);
+        var projectileComponent = newProjectile.GetComponent<Projectile>();
+        projectileComponent.DamageCaused = damagePerShot;
+        projectileComponent.ProjectileSpeed = 4;
+        
+        //Get distance and fire
+        Vector3 unitVectorToPlayer = (player.transform.position - projectileSocket.transform.position).normalized;
+        newProjectile.GetComponent<Rigidbody>().velocity = unitVectorToPlayer * projectileComponent.ProjectileSpeed;
+        print(projectileComponent.ProjectileSpeed);
     }
 
     void OnDrawGizmos()
