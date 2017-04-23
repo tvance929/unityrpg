@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float DamageCaused;
+    float damageCaused;
     public float ProjectileSpeed;
-    
-    public void Start()
+
+    public void SetDamage(float damage)
     {
-        print("Projectile");
+        damageCaused = damage;
     }
 
     void OnTriggerEnter(Collider collider)
@@ -17,7 +17,7 @@ public class Projectile : MonoBehaviour
         Component damageableComponent = collider.gameObject.GetComponent(typeof(IDamageable));
         if (damageableComponent)
         {
-            (damageableComponent as IDamageable).TakeDamage(DamageCaused);
+            (damageableComponent as IDamageable).TakeDamage(this.damageCaused);
         }
     }
 }
